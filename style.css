@@ -1,0 +1,336 @@
+/* Importation des polices */
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono&display=swap');
+
+/* Styles globaux */
+body {
+    margin: 0;
+    background-color: black;
+    background-image: url(./image/Fond.png);
+    background-size: 100% auto;
+    font-family: 'Space Mono', monospace;
+    color: white;
+}
+
+main {
+    padding-bottom: 100px;
+}
+
+footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: black;
+    padding: 15px;
+}
+
+/* Titres */
+h1 {
+    color: white;
+    text-align: center;
+    margin-top: 50px;
+}
+
+section h2 {
+    padding-top: 25px;
+    color: white;
+    text-align: center;
+    margin-top: 50px;
+}
+
+section h3 {
+    padding-top: 25px;
+    padding-left: 250px;
+    display: flex;
+    align-items: center;
+}
+
+/* Navigation */
+nav {
+    display: flex;
+    margin-top: 0;
+    padding: 10px;
+    background-color: black;
+    color: white;
+}
+
+nav ul {
+    font-size: 25px;
+    list-style-type: none;
+    text-align: center  ;
+    justify-content: flex-end;
+}
+
+nav h2 a {
+    padding-left: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+nav ul li {
+    display: inline;
+    margin-left: 50px;
+    margin-right: 80px;
+}
+
+nav ul li img {
+    margin-left: 8px;
+    vertical-align: middle;
+}
+
+nav a {
+    text-decoration: none;
+    color: white;
+    display: inline-block;
+    position: relative;
+}
+
+nav a::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    transform: scaleX(0);
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: white;
+    transition: transform 1s ease-out;
+}
+
+nav a:hover::after {
+    transform: scaleX(1);
+}
+
+nav a img:hover {
+    transform: scale(1.1);
+}
+
+/* Tableaux */
+table, th, td {
+    text-align: center;
+    border: 1px solid white;
+    border-collapse: collapse;
+}
+
+table {
+    margin: auto;
+}
+
+td {
+    color: white;
+    padding: 5px;
+}
+
+tr:not(:last-child) {
+    text-align: center;
+    border-bottom: 2px solid white;
+}
+
+caption {
+    margin: auto;
+    color: white;
+    text-align: center;
+}
+
+/* Listes */
+ul {
+    list-style-type: none;
+    text-align: center;
+}
+
+/* Autres styles spécifiques */
+section h3 img {
+    padding-left: 20px;
+}
+
+p {
+    text-align: center;
+    padding-inline: 50px;
+}
+
+dl {
+    display: block;
+    justify-items: center;
+}
+dt {
+   display: flex;
+    align-items: center;
+}
+
+dt img {
+    padding-inline: 20px;
+}
+
+span{
+    text-align: center;
+    padding-inline: 50px;
+
+}
+
+dd {
+    padding-bottom: 40px;
+
+}
+
+figure {
+    text-align: center;
+}
+
+
+/* Couleurs spécifiques */
+.Soleil {
+    padding-top: 25px;
+    padding-left: 250px;
+    color: #FFDD00;
+}
+
+.Lune {
+    color: #D3D3D3;
+    padding-top: 25px;
+    padding-left: 250px;
+}
+
+.Mars {
+    color:#FF6600 ;
+}
+
+.Jaune {
+    color: #FFDD00;
+}
+
+.Gris {
+    color: #D3D3D3;
+}
+
+.Bleu {
+    color: #1E90FF;
+}
+
+.Beige {
+    color: #D8B57E;
+    padding-bottom: 75px;
+}
+
+.BleuClair {
+    color: #90bcff;
+}
+
+
+#Video {
+    display: inline-block; 
+    padding: 20px 40px;
+    background-color: #D8B57E; 
+    color: white;   
+    border-radius: 25px; 
+    font-size: 18px; 
+
+}
+
+#Vaisseau {
+    display: block; 
+    text-align: center;
+    padding: 20px 40px;
+    background-color: #D3D3D3; 
+    color: black;   
+    border-radius: 25px; 
+    font-size: 18px; 
+
+
+}
+
+#Alien {
+    display: inline-block; 
+    padding: 20px 40px;
+    background-color: #FF6600; 
+    color: white;   
+    border-radius: 25px; 
+    font-size: 18px; 
+}
+
+#Pdf {
+     display: inline-block; 
+    padding: 20px 40px;
+    background-color: #2C3E50; 
+    color: white;   
+    border-radius: 25px; 
+    font-size: 18px; 
+}
+
+#Illustration-Systeme{
+    max-width: 100%
+}
+
+#Liste-Soleil strong{
+    padding-top: 25px;
+    color: #FFDD00;
+}
+
+
+
+#Remonter {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    margin-top: 300px;
+    color: white;
+    font-size: 25px;
+    background-color: rgba(255, 255, 255, 0.2); 
+
+}
+
+
+
+
+.side-menu {
+    position: fixed;
+    right: 20px;
+    top: 5%;
+    cursor: pointer;
+    background-color: transparent;
+}
+
+.menu-label {
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 10px;
+    border: 2px solid white;
+    border-radius: 20px;
+}
+
+
+.side-menu ul {
+    list-style: none;
+    padding: 0;
+    display: none;
+    background-color: black;
+}
+
+.side-menu:hover ul {   
+    display: flex;
+    flex-direction: column;
+    border: 2px solid white;
+    border-radius: 20px;
+    padding: 15px 15px;
+
+}
+
+.side-menu:hover .menu-label {
+    display: none;
+}
+
+.side-menu li {
+    margin: 0;
+    width: fit-content;
+}
+
+.side-menu a {  
+    background-color: transparent;
+    color: white;
+    font-size: 16px;
+    padding-top: 30px;
+}
+
+.side-menu a:hover {
+    color: #1E90FF;
+}
