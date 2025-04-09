@@ -1,101 +1,11 @@
 <?php
 require_once "./include/functions.inc.php";
-$geoGeoPlugin = getGeoGeoPlugin();
-$localcity = $geoGeoPlugin->geoplugin_city;
-$localdata = getWeather($localcity);
-$forecastlocal = $localdata['forecast']['forecastday'][0]['day'];
-$city = getcity();
-$citysansaccent = iconv('UTF-8', 'ASCII//TRANSLIT', $city);
-$data = getWeather($citysansaccent);
-$forecasthour = $data['forecast']['forecastday'][0]['hour'];
-$forecastday = $data['forecast']['forecastday'];
-
-$regions = getData(API_REGIONS);
-
-$selectedRegion = $_GET['region'] ?? '';
-$selectedDepartement = $_GET['departement'] ?? '';
-$departements = [];
-$communes = [];
-
-if ($selectedRegion) {
-    $departements = getData(str_replace('{code}', $selectedRegion, API_DEPARTEMENTS));
-}
-
-if ($selectedDepartement) {
-    $communes = getData(str_replace('{code}', $selectedDepartement, API_COMMUNES));
-}
+$title = "Météo Info Accueil";
+$h1 = "Carte de France";
+require"./include/header.inc.php";
 ?>
-
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Météo Info</title>
-    <link rel="stylesheet" type="text/css" href="css/clair.css"/>
-</head>
-<body>
-    <header>
-        <div class="header1">
-            <p class="logo">Meteo Info</p>
-            <form method="GET">
-                <input type="text" name="city" placeholder="Entrez une ville" required>
-                <button type="submit">Rechercher</button>
-            </form>
-            <span><?php echo "Temp moyenne a $localcity : {$forecastlocal['avgtemp_c']}"; ?></span>
-        </div>
-        <h1>Météo de <?php echo htmlspecialchars($city); ?></h1>
-        <nav>
-            <ul>
-                <li>Carte de France</li>
-                <li>Villes Principales</li>
-                <li>Statistiques</li>
-            </ul>
-        </nav>
-    </header>
 <main>
-    <form method="GET">
-        <label for="region">Choisissez une region :</label>
-        <select name="region" id="region" onchange="this.form.submit()">
-            <option value="">-- selectionner region --</option>
-            <?php foreach ($regions as $region): ?>
-                <option value="<?= $region['code'] ?>" <?= ($region['code'] == $selectedRegion) ? 'selected' : '' ?>>
-                    <?= $region['nom'] ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
-    </form>
-
-    <?php if ($selectedRegion): ?>
-    <form method="GET">
-        <input type="hidden" name="region" value="<?= $selectedRegion ?>">
-        <label for="departement">Choisissez un departement :</label>
-        <select name="departement" id="departement" onchange="this.form.submit()">
-            <option value="">-- selectionner departement --</option>
-            <?php foreach ($departements as $departement): ?>
-                <option value="<?= $departement['code'] ?>" <?= ($departement['code'] == $selectedDepartement) ? 'selected' : '' ?>>
-                    <?= $departement['nom'] ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
-    </form>
-    <?php endif; ?>
-
-    <?php if ($selectedDepartement): ?>
-    <form method="GET">
-        <input type="hidden" name="region" value="<?= $selectedRegion ?>">
-        <input type="hidden" name="departement" value="<?= $selectedDepartement ?>">
-        <label for="city">Choisissez une commune :</label>
-        <select name="city" id="city" onchange="this.form.submit()">
-            <option value="">-- selectionner commune --</option>
-            <?php foreach ($communes as $commune): ?>
-                <option value="<?= $commune['nom'] ?>" <?= ($commune['nom'] == $city) ? 'selected' : '' ?>>
-                    <?= $commune['nom'] ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
-    </form>
-    <?php endif; ?>
+    <? require"./include/forms.inc.php"; ?>
 
     <img src="./images/carte_france.jpg" usemap="#image-map">
 
@@ -120,78 +30,7 @@ if ($selectedDepartement) {
         <area target="_self" alt="Centre-Val De Loire" title="Centre-Val De Loire" href="https://adamleopole.alwaysdata.net/projet/index.php?region=24" coords="777,633,790,644,804,643,819,629,844,633,865,629,881,612,899,596,913,594,914,574,906,553,900,531,906,511,911,490,911,465,899,460,888,460,875,454,866,440,856,436,837,436,829,427,820,415,807,395,799,388,784,387,774,395,760,397,764,421,764,433,756,437,759,457,752,469,747,486,737,509,706,518,707,534,700,556,696,564,714,580,733,594,749,583,759,600,767,609,765,623" shape="poly">
         <area target="_self" alt="Bourgogne-Franche-Comté" title="Bourgogne-Franche-Comté" href="https://adamleopole.alwaysdata.net/projet/index.php?region=27" coords="956,440,960,458,968,460,973,474,981,484,994,477,1018,477,1032,477,1040,468,1050,486,1053,503,1065,513,1079,514,1086,517,1095,513,1104,505,1115,497,1118,486,1128,486,1136,477,1150,477,1161,482,1168,477,1179,478,1183,486,1188,493,1196,492,1201,505,1204,517,1209,526,1199,537,1204,546,1199,559,1176,587,1167,598,1155,606,1144,629,1140,640,1130,643,1123,651,1107,652,1094,651,1086,641,1079,636,1071,631,1061,629,1050,628,1049,649,1045,657,1034,652,1024,651,1018,660,1009,662,1000,666,987,662,984,652,984,639,981,629,969,627,964,611,960,598,949,606,941,609,932,607,923,603,919,595,919,586,920,575,912,558,903,530,912,506,918,477,912,453,922,436,944,431" shape="poly">
 </map>
-
-    <table>
-        <caption>Tableau des previsions pour les 4 prochains jours</caption>
-        <tr>
-            <th><?php echo date('d/m', strtotime($forecastday[0]['date'])); ?></th>
-            <th><?php echo date('d/m', strtotime($forecastday[1]['date'])); ?></th>
-            <th><?php echo date('d/m', strtotime($forecastday[2]['date'])); ?></th>
-            <th><?php echo date('d/m', strtotime($forecastday[3]['date'])); ?></th>
-        </tr>
-        <tr>
-            <td><img src="<?php echo $forecastday[0]['day']['condition']['icon']; ?>" alt="Météo"></td>
-            <td><img src="<?php echo $forecastday[1]['day']['condition']['icon']; ?>" alt="Météo"></td>
-            <td><img src="<?php echo $forecastday[2]['day']['condition']['icon']; ?>" alt="Météo"></td>
-            <td><img src="<?php echo $forecastday[3]['day']['condition']['icon']; ?>" alt="Météo"></td>
-        </tr>
-        <tr>
-            <td><?php echo $forecastday[0]['day']['avgtemp_c']; ?>°C</td>
-            <td><?php echo $forecastday[1]['day']['avgtemp_c']; ?>°C</td>
-            <td><?php echo $forecastday[2]['day']['avgtemp_c']; ?>°C</td>
-            <td><?php echo $forecastday[3]['day']['avgtemp_c']; ?>°C</td>
-        </tr>
-        <tr>
-            <td>Vent: <?php echo $forecastday[0]['day']['maxwind_kph']; ?> km/h</td>
-            <td>Vent: <?php echo $forecastday[1]['day']['maxwind_kph']; ?> km/h</td>
-            <td>Vent: <?php echo $forecastday[2]['day']['maxwind_kph']; ?> km/h</td>
-            <td>Vent: <?php echo $forecastday[3]['day']['maxwind_kph']; ?> km/h</td>
-        </tr>
-        <tr>
-            <td>Précip.: <?php echo $forecastday[0]['day']['totalprecip_mm']; ?> mm</td>
-            <td>Précip.: <?php echo $forecastday[1]['day']['totalprecip_mm']; ?> mm</td>
-            <td>Précip.: <?php echo $forecastday[2]['day']['totalprecip_mm']; ?> mm</td>
-            <td>Précip.: <?php echo $forecastday[3]['day']['totalprecip_mm']; ?> mm</td>
-        </tr>
-    </table>
-
-    <table>
-        <caption>Tableau des previsions detaillees pour aujourd'hui</caption>
-        <tr>
-            <th>Heure</th>
-            <th>Température (°C)</th>
-            <th>Icône</th>
-            <th>Vent (km/h)</th>
-            <th>Humidité (%)</th>
-            <th>Nuages (%)</th>
-            <th>UV Index</th>
-        </tr>
-        <?php foreach ($forecasthour as $hour) : ?>
-            <tr>
-                <td><?php echo date('H:i', strtotime($hour['time'])); ?></td>
-                <td><?php echo $hour['temp_c']; ?></td>
-                <td><img src="<?php echo $hour['condition']['icon']; ?>" alt="Météo"></td>
-                <td><?php echo $hour['wind_kph']; ?></td>
-                <td><?php echo $hour['humidity']; ?></td>
-                <td><?php echo $hour['cloud']; ?></td>
-                <td><?php echo $hour['uv']; ?></td>
-            </tr>
-        <?php endforeach; ?>
-    </table>
 </main>
-<footer>
-    <div class="footer_left">
-        <span>Meteos des 20 plus grands villes</span>
-        <span>•<a href="https://adamleopole.alwaysdata.net/projet/index.php?city=Paris">Paris</a> • Ville • Ville • Ville • Ville • Ville • Ville • Ville • Ville • Ville</span>
-        <span>• Ville • Ville • Ville • Ville • Ville • Ville • Ville • Ville • Ville • Ville</span>
-    </div>
-    <div class="footer_middle">
-    </div>
-    <div class="footer_right">
-        <span>Adam LEOPOLE DIT MARIE, Alexis BERTRAND</span>
-        <span>CY Cergy Paris Université - L2 INFORMATIQUE</span>
-        <span>UE Développement Web - Avril 2025</span>
-    </div>
-</footer>
-</body>
-</html>
+<?php
+require"./include/footer.inc.php";
+?>
