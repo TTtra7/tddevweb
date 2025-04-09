@@ -229,4 +229,20 @@ function lasttowncookie(){
         setcookie('lastcity', [$_GET[$cookie], time()], time()+864000);
     }
 }
+function alea(){
+    $images = [
+        'images/image1.jpg',
+        'images/image2.jpg',
+        'images/image3.jpg',
+        'images/image4.jpg',
+        'images/image5.jpg',
+        'images/image6.jpg',
+        'images/image7.jpg',
+        'images/image8.jpg',
+        'images/image9.jpg',
+        'images/image10.jpg'
+    ];
+    $randomImage = $images[array_rand($images)];
+    return $randomImage;
+}
 ?>
