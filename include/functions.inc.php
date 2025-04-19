@@ -60,10 +60,10 @@ function getcity():string {
 }
 
 /**
- *  
+ * Permet de recuperer les infos geographiques avec l'api geoplugin 
  *
  * 
- * @return 
+ * @return string qui est le flux xml recupere de l'api
  */
 function getGeoGeoPlugin() {
     $ip = $_SERVER['REMOTE_ADDR'];
@@ -78,32 +78,49 @@ function getGeoGeoPlugin() {
 define("WEATHERAPI_API_KEY", "87fd579e5f744cf9a2f190415253103");
 
 /**
- *   
- *
+ * Permet de recuperer les donnees de l'api meteo en prennant une ville en parametre
+ * @param string nom de la ville pour la recherche
  * 
- * @return 
+ * @return string flux json de la meteo de la ville pour les 3 prochains jours
  */
 function getWeather($city) {
-    $url = "http://api.weatherapi.com/v1/forecast.json?key=".WEATHERAPI_API_KEY."&q=$city&days=4&aqi=no&alerts=no";
-    $info = file_get_contents($url);
+    $coords = getCoord($city);
+    if ($coords) {
+        $query = $coords['lat'] . ',' . $coords['lon'];
+    } else {
+        $query = $city;
+    }
+
+    $url = "http://api.weatherapi.com/v1/forecast.json?key=" . WEATHERAPI_API_KEY . "&q=" . $query . "&days=3&aqi=no&alerts=no";
+    $info = @file_get_contents($url);
     if ($info) {
         return json_decode($info, true);
     }
     return null;
 }
 
+
 /**
- *   
- *
+ * Recupere les coordonnees de la ville demandee en passant par le csv contenant toutes les villes francaises
+ * @param string nom de la ville pour la recherche
  * 
- * @return 
+ * @return array de latitude et longitude si la ville est dans le fichier csv
  */
-function getData($url) {
-    $response = file_get_contents($url);
-    if ($response === false) {
-        return [];
+function getCoord($city) {
+    $filename = 'cities.csv';
+    if (!file_exists($filename)) return null;
+
+    $rows = file($filename, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($rows as $row) {
+        $fields = str_getcsv($row);
+        if (isset($fields[4]) && strtolower(trim($fields[4])) === strtolower(trim((string)$city))) {
+                return [
+                    'lat' => $fields[6],
+                    'lon' => $fields[7]
+                ];
+        }
     }
-    return json_decode($response, true);
+    return null;
 }
 
 /**
@@ -151,67 +168,83 @@ function regionlist() {
     return $arrayreg;
 }
 
-
-define('HISTORY_CSV_FILE', 'history.csv');
-
-function loadCSVHistory() {
-    $history = [];
-    if (file_exists(HISTORY_CSV_FILE)) {
-        $rows = file(HISTORY_CSV_FILE, FILE_IGNORE_NEW_LINES);
-        foreach ($rows as $row) {
-            $fields = str_getcsv($row);
-            $ip = array_shift($fields);
-            $history[$ip] = $fields;
+/**
+ * Permet de decoder le flux json du cookie city_history
+ *
+ * 
+ * @return array de l'historique des villes visitees contenu dans le cookie
+ */
+function loadCookieHistory() {
+    if (isset($_COOKIE['city_history'])) {
+        $history = json_decode($_COOKIE['city_history'], true);
+        if (is_array($history)) {
+            return $history;
         }
     }
-    return $history;
+    return [];
 }
 
-function saveCSVHistory($history) {
-    $rows = [];
-    foreach ($history as $ip => $cities) {
-        $row = array_merge([$ip], $cities);
-        $rows[] = implode(',', $row);
-    }
-    file_put_contents(HISTORY_CSV_FILE, implode("\n", $rows));
+/**
+ * Sauvegarde l'historique des villes visitees dans le cookie city_history
+ * @param array contenant l'historique des villes visitees 
+ * 
+ *
+ */
+function saveCookieHistory($history) {
+    $history = array_slice($history, 0, 5);
+    setcookie('city_history', json_encode($history), time() + (864000), "/");
 }
 
-function addcityhistory() {
-    $city = isset($_GET['city']) ? $_GET['city'] : NULL;
-    $ip = $_SERVER['REMOTE_ADDR'];
-    $history = loadCSVHistory();
-
+/**
+ * Ajoute la ville visitee a l'historique des villes visitees
+ * 
+ * 
+ *
+ */
+function addCityHistory() {
+    $city = isset($_GET['city']) ? trim($_GET['city']) : null;
     if ($city) {
-        if (!isset($history[$ip])) {
-            $history[$ip] = [];
-        }
+        $history = loadCookieHistory();
 
-        $history[$ip] = array_filter($history[$ip], function($c) use ($city) {
+        // Supprimer la ville si elle est déjà dans l'historique (insensible à la casse)
+        $history = array_filter($history, function($c) use ($city) {
             return strtolower($c) !== strtolower($city);
         });
 
-        array_unshift($history[$ip], $city);
+        // Ajouter la nouvelle ville au début
+        array_unshift($history, $city);
 
-        saveCSVHistory($history);
+        // Sauvegarder
+        saveCookieHistory($history);
     }
 }
 
+/**
+ * Permet d'afficher l'historique des villes visitees sous la forme d'une nav 
+ * 
+ * 
+ * @return string qui est le code html necessaire pour afficher la nav
+ */
 function displayhistory() {
-    $ip = $_SERVER['REMOTE_ADDR'];
-    $history = loadCSVHistory();
-    if (isset($history[$ip])) {
+    $history = loadCookieHistory();
+    if (!empty($history)) {
         $display = "<nav id='history'><ul>";
-        $last5cities = array_slice($history[$ip], 0, 5);
+        $last5cities = array_slice($history, 0, 5);
         foreach ($last5cities as $city) {
-            $cityEncoded = iconv('UTF-8', 'ASCII//TRANSLIT', $city);
-            $display .= "<li><a href='https://adamleopole.alwaysdata.net/projet/meteoweek.php?city=" . urlencode($cityEncoded) . "'>" . htmlspecialchars($city) . "</a></li>";
+            $display .= "<li><a href='https://adamleopole.alwaysdata.net/projet/meteoweek.php?city=" . str_replace(" ", "%20", $city) . "'>" . htmlspecialchars($city) . "</a></li>";
         }
         $display .= "</ul></nav>";
         return $display;
     }
-    return NULL;
+    return null;
 }
 
+/**
+ * Verifie le cookie mis en parametres pour l'actualiser si necessaire
+ * 
+ * 
+ * @return string cookie ou la valeur de base dans le cas du style
+ */
 function checkcookies(string $cookie){
     if (isset($_GET[$cookie])){
         setcookie($cookie, $_GET[$cookie], time()+864000);
@@ -224,25 +257,42 @@ function checkcookies(string $cookie){
     }
 }
 
-function lasttowncookie(){
-    if (isset($_GET[$cookie])){
-        setcookie('lastcity', [$_GET[$cookie], time()], time()+864000);
+/**
+ * Incremente 1 au compteur de visite de la ville mise en parametre
+ * @param string ville pour laquelle on doit augmenter la stat de visite
+ * 
+ * 
+ */
+function addStat($ville) {
+    if (!empty($ville)) {
+
+    $fichier = './recherches.csv';
+    $stats = [];
+
+    if (file_exists($fichier)) {
+        $f = fopen($fichier, 'r');
+        while (($ligne = fgetcsv($f)) !== false) {
+            if (count($ligne) === 2) {
+                $stats[$ligne[0]] = (int)$ligne[1];
+            }
+        }
+        fclose($f);
     }
-}
-function alea(){
-    $images = [
-        'images/image1.jpg',
-        'images/image2.jpg',
-        'images/image3.jpg',
-        'images/image4.jpg',
-        'images/image5.jpg',
-        'images/image6.jpg',
-        'images/image7.jpg',
-        'images/image8.jpg',
-        'images/image9.jpg',
-        'images/image10.jpg'
-    ];
-    $randomImage = $images[array_rand($images)];
-    return $randomImage;
+
+    $stats[$ville] = ($stats[$ville] ?? 0) + 1;
+
+    if (!file_exists($fichier)) {
+        $f = fopen($fichier, 'w');
+        fputcsv($f, ['Ville', 'Nombre de recherches']);
+    } else {
+        $f = fopen($fichier, 'w');
+    }
+
+    foreach ($stats as $nom => $nb) {
+        fputcsv($f, [$nom, $nb]);
+    }
+    fclose($f);
+
+    }
 }
 ?>

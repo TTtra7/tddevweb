@@ -7,11 +7,14 @@ $localcity = $geoGeoPlugin->geoplugin_city;
 $localdata = getWeather($localcity);
 $forecastlocal = $localdata['forecast']['forecastday'][0]['day'];
 $city = getcity();
-$citysansaccent = iconv('UTF-8', 'ASCII//TRANSLIT', $city);
-$data = getWeather(str_replace(" ", "%20", $citysansaccent));
-$forecastday = $data['forecast']['forecastday'];
-
-echo addcityhistory();
+if (!empty(getWeather($city))) {
+    $data = getWeather($city);
+    $forecastday = $data['forecast']['forecastday'];
+    echo addcityhistory();
+    $gotForecast=true;
+} else {
+    $gotForecast=false;
+}
 
 $regionsData = regionlist();
 
@@ -34,43 +37,57 @@ if ($selectedDepartement) {
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="author" content="Adam LEOPOLE DIT MARIE, Alexis BERTRAND" />
+    <link rel="icon" type="image/png" href="./images/favicon.png" />
     <title><?= $title ?></title>
     <link rel="stylesheet" type="text/css" href="css/<?= $style ?>.css"/>
 </head>
 <body>
     <header>
         <div class="header1">
-            <a href="index.php"><p class="logo">Meteo Info</p></a> 
-            <form method="GET">
-                <input type="text" name="city" placeholder="Entrez une ville" required>
-                <button type="submit">Rechercher</button>
-            </form>
-            <span><?php echo "Temp moyenne a $localcity : {$forecastlocal['avgtemp_c']}"; ?></span>
-            <?php
-                $params = $_GET;
-                if ($style == 'clair') {
-                    $nvstyle = 'sombre';
-                } else {
-                    $nvstyle = 'clair';
-                }
-                $params['style'] = $nvstyle;
-                $query = http_build_query($params);
-                $baseUrl = strtok($_SERVER['REQUEST_URI'], '?');
-                echo "<a href='" . $baseUrl . "?" . $query . "'>Mode " . ucfirst($nvstyle) . "</a>";
-            ?>
+            <div class="header1-1">
+                <a href="index.php"><img src="images/logo.png" alt="Logo Meteo Info" width="150" height="150"/></a>
+            </div>
+            <div class="header1-2">
+                <form method="GET" action="https://adamleopole.alwaysdata.net/projet/meteoweek.php">
+                    <label for="city-1">Ville : </label>
+                    <input type="text" id="city-1" name="city" placeholder="Entrez une ville" required="required"/>
+                    <button type="submit">Rechercher</button>
+                </form>
+            </div>
+            <div class="header1-3">
+                <div class="localforecast">
+                    <span style="font-size: 30px;"><?php echo "$localcity : {$forecastlocal['avgtemp_c']}°C" ?></span>
+                    <img src="<?php echo $forecastlocal['condition']['icon']; ?>" alt="Météo Icon" width='30' height='30'/>
+                </div>
+                <div class="style">
+                    <?php
+                        $params = $_GET;
+                        if ($style == 'clair') {
+                            $nvstyle = 'sombre';
+                        } else {
+                           $nvstyle = 'clair';
+                        }
+                        $params['style'] = $nvstyle;
+                        $query = str_replace("&", "&amp;", http_build_query($params));
+                        $baseUrl = strtok($_SERVER['REQUEST_URI'], '?');
+                        echo "<a href='" . $baseUrl . "?" . $query . "'><img src='images/". $nvstyle .".png' alt='Logo style' width='55' height='55'/></a>";
+                    ?>
+                </div>
+            </div>
         </div>
         <h1><?= $h1 ?></h1>
         <nav id="navigation">
             <ul>
                 <li><a href="index.php">Carte de France</a></li>
                 <li><a href="meteoweek.php">Previsions</a></li>
-                <li>Statistiques</li>
+                <li><a href="meteoweekastro.php">Meteo Astro de la semaine</a></li>
+                <li><a href="stat.php">Statistiques</a></li>
             </ul>
         </nav>
         <?php echo displayhistory(); ?>

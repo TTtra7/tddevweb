@@ -3,44 +3,58 @@ require_once "./include/functions.inc.php";
 $title = "Météo Info Semaine";
 $h1 ="Meteo pour " . getcity();
 require"./include/header.inc.php";
+if (isset($_GET['city'])){
+    echo addStat($_GET['city']);
+}
 ?>
+<?php if ($gotForecast): ?>
 <main>
-	<? require"./include/forms.inc.php"; ?>
-
-	<table>
-        <caption>Tableau des previsions pour les 4 prochains jours</caption>
+    <?php require "./include/forms.inc.php"; ?>
+    <table>
+        <caption>Tableau des prévisions pour les 3 prochains jours</caption>
         <tr>
-            <th><a href="meteodetailled.php?city=<?php echo $city?>&day=0"><?php echo date('d/m', strtotime($forecastday[0]['date'])); ?></a></th>
-            <th><a href="meteodetailled.php?city=<?php echo $city?>&day=1"><?php echo date('d/m', strtotime($forecastday[1]['date'])); ?></a></th>
-            <th><a href="meteodetailled.php?city=<?php echo $city?>&day=2"><?php echo date('d/m', strtotime($forecastday[2]['date'])); ?></a></th>
-            <th><a href="meteodetailled.php?city=<?php echo $city?>&day=3"><?php echo date('d/m', strtotime($forecastday[3]['date'])); ?></a></th>
+            <th>Donnees\Jour</th>
+            <th><a href="meteodetailled.php?city=<?php echo $city ?>&amp;day=0" class="tab-link"><?php echo date('d/m', strtotime($forecastday[0]['date'])); ?></a></th>
+            <th><a href="meteodetailled.php?city=<?php echo $city ?>&amp;day=1" class="tab-link"><?php echo date('d/m', strtotime($forecastday[1]['date'])); ?></a></th>
+            <th><a href="meteodetailled.php?city=<?php echo $city ?>&amp;day=2" class="tab-link"><?php echo date('d/m', strtotime($forecastday[2]['date'])); ?></a></th>
         </tr>
         <tr>
-            <td><img src="<?php echo $forecastday[0]['day']['condition']['icon']; ?>" alt="Météo"></td>
-            <td><img src="<?php echo $forecastday[1]['day']['condition']['icon']; ?>" alt="Météo"></td>
-            <td><img src="<?php echo $forecastday[2]['day']['condition']['icon']; ?>" alt="Météo"></td>
-            <td><img src="<?php echo $forecastday[3]['day']['condition']['icon']; ?>" alt="Météo"></td>
+            <th>Icone Meteo</th>
+            <td><img src="<?php echo $forecastday[0]['day']['condition']['icon']; ?>" alt="Météo Icon"/></td>
+            <td><img src="<?php echo $forecastday[1]['day']['condition']['icon']; ?>" alt="Météo Icon"/></td>
+            <td><img src="<?php echo $forecastday[2]['day']['condition']['icon']; ?>" alt="Météo Icon"/></td>
         </tr>
         <tr>
-            <td><?php echo $forecastday[0]['day']['avgtemp_c']; ?>°C</td>
-            <td><?php echo $forecastday[1]['day']['avgtemp_c']; ?>°C</td>
-            <td><?php echo $forecastday[2]['day']['avgtemp_c']; ?>°C</td>
-            <td><?php echo $forecastday[3]['day']['avgtemp_c']; ?>°C</td>
+            <th>Temperature en °C</th>
+            <td><?php echo $forecastday[0]['day']['avgtemp_c']; ?></td>
+            <td><?php echo $forecastday[1]['day']['avgtemp_c']; ?></td>
+            <td><?php echo $forecastday[2]['day']['avgtemp_c']; ?></td>
         </tr>
         <tr>
-            <td>Vent: <?php echo $forecastday[0]['day']['maxwind_kph']; ?> km/h</td>
-            <td>Vent: <?php echo $forecastday[1]['day']['maxwind_kph']; ?> km/h</td>
-            <td>Vent: <?php echo $forecastday[2]['day']['maxwind_kph']; ?> km/h</td>
-            <td>Vent: <?php echo $forecastday[3]['day']['maxwind_kph']; ?> km/h</td>
+            <th>Vent en Km/h</th>
+            <td><?php echo $forecastday[0]['day']['maxwind_kph']; ?> </td>
+            <td><?php echo $forecastday[1]['day']['maxwind_kph']; ?> </td>
+            <td><?php echo $forecastday[2]['day']['maxwind_kph']; ?> </td>
         </tr>
         <tr>
-            <td>Précip.: <?php echo $forecastday[0]['day']['totalprecip_mm']; ?> mm</td>
-            <td>Précip.: <?php echo $forecastday[1]['day']['totalprecip_mm']; ?> mm</td>
-            <td>Précip.: <?php echo $forecastday[2]['day']['totalprecip_mm']; ?> mm</td>
-            <td>Précip.: <?php echo $forecastday[3]['day']['totalprecip_mm']; ?> mm</td>
+            <th>Précip. en mm</th>
+            <td><?php echo $forecastday[0]['day']['totalprecip_mm']; ?></td>
+            <td><?php echo $forecastday[1]['day']['totalprecip_mm']; ?></td>
+            <td><?php echo $forecastday[2]['day']['totalprecip_mm']; ?></td>
         </tr>
     </table>
+    <?php require "./include/randomImage.inc.php"; ?>
 </main>
+<?php else: ?>
+<main>
+    <span>Erreur lors de la saisie de la ville, veuillez réessayer</span>
+    <form method="GET" action="https://adamleopole.alwaysdata.net/projet/meteoweek.php">
+        <input type="text" name="city" placeholder="Entrez une ville" required>
+        <button type="submit">Rechercher</button>
+    </form>
+    <?php require "./include/randomImage.inc.php"; ?>
+</main>
+<?php endif; ?>
 <?php
 require"./include/footer.inc.php";
 ?>

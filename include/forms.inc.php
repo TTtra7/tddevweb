@@ -29,8 +29,8 @@
     <form action="https://adamleopole.alwaysdata.net/projet/meteoweek.php" method="GET">
         <input type="hidden" name="region" value="<?= htmlspecialchars($selectedRegion) ?>">
         <input type="hidden" name="departement" value="<?= htmlspecialchars($selectedDepartement) ?>">
-        <label for="city">Choisissez une commune :</label>
-        <input list="communeList" name="city" id="city" onchange="this.form.submit()" placeholder="- sélectionner commune -">
+        <label for="city-2">Choisissez une commune :</label>
+        <input list="communeList" name="city" id="city-2" onchange="this.form.submit()" placeholder="- sélectionner commune -">
         <datalist id="communeList">
             <?php foreach ($communes as $city): ?>
                 <option value="<?= htmlspecialchars($city) ?>">
