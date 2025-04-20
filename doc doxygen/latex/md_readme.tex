@@ -1,0 +1,58 @@
+\chapter{🌦️ Météo Info -\/ Site Web}
+\hypertarget{md_readme}{}\label{md_readme}\index{🌦️ Météo Info -\/ Site Web@{🌦️ Météo Info -\/ Site Web}}
+\label{md_readme_autotoc_md0}%
+\Hypertarget{md_readme_autotoc_md0}%
+\hypertarget{md_readme_autotoc_md1}{}\doxysection{\texorpdfstring{📝 Description}{📝 Description}}\label{md_readme_autotoc_md1}
+{\bfseries{Météo Info}} est un site web interactif qui permet de consulter les prévisions météo en France, par ville, département ou région. ~\newline
+ Il intègre des données issues d\textquotesingle{}API, et propose une expérience utilisateur personnalisée grâce aux cookies.\hypertarget{md_readme_autotoc_md2}{}\doxysection{\texorpdfstring{🔧 Technologies utilisées}{🔧 Technologies utilisées}}\label{md_readme_autotoc_md2}
+
+\begin{DoxyItemize}
+\item {\bfseries{HTML5}} \+: structure du site
+\item {\bfseries{CSS3}} \+: mise en forme (style)
+\item {\bfseries{PHP8}} \+: génération dynamique du contenu, enregistrement des consultations
+\item {\bfseries{Cookies}} \+: gestion des préférences utilisateur (mode jour/nuit, ville consultée)
+\item {\bfseries{APIs}} \+: récupération des données météo au format utilisé
+\end{DoxyItemize}\hypertarget{md_readme_autotoc_md3}{}\doxysection{\texorpdfstring{📁 Structure du projet}{📁 Structure du projet}}\label{md_readme_autotoc_md3}
+
+\begin{DoxyItemize}
+\item {\ttfamily css/} \+:Dossier avec le document interne
+\begin{DoxyItemize}
+\item {\ttfamily clair.\+css} \+: Fichier CSS principal contenant les styles clair du site
+\item {\ttfamily sombre.\+css} \+: Fichier CSS secondaire contenant les styles sombre du site
+\end{DoxyItemize}
+\item {\ttfamily doc doxygen/} \+:Dossier avec le document doxygen du site
+\item {\ttfamily images/} \+: Dossier contenant les images utilisées dans le site sans conté les images aléatoires
+\begin{DoxyItemize}
+\item {\ttfamily clair.\+png} \+: Image indiquant le mode clair du site
+\item {\ttfamily favicon.\+png} \+: Image du favicon du site
+\item {\ttfamily carte\+\_\+france.\+jpg} \+: Image de la carte intéractive
+\item {\ttfamily clair\+\_\+background.\+jpg} \+: Image de fond clair
+\item {\ttfamily logo.\+png} \+: Logo de notre site
+\item {\ttfamily sombre.\+png} \+: Image indiquant le mode sombre du site
+\item {\ttfamily sombre\+\_\+background.\+jpg} \+: Image de fond sombre
+\end{DoxyItemize}
+\item {\ttfamily include/} \+: dossier possédant tous les includes (ce qui represente en grande partie du back)
+\begin{DoxyItemize}
+\item {\ttfamily footer.\+inc.\+php} \+: Footer du site
+\item {\ttfamily header.\+inc.\+php} \+: header du site
+\item {\ttfamily functions.\+inc.\+php} \+: fichier avec toute les fonctions du site
+\item {\ttfamily forms.\+inc.\+php} \+: fichier qui permet d\textquotesingle{}importer sur toute les pages les menu de choix pour la météo
+\item {\ttfamily random\+Image.\+inc.\+php} \+: permet d\textquotesingle{}afficher des images aléatoire parmis une séléction de celle-\/ci
+\end{DoxyItemize}
+\item {\ttfamily photos/} \+: dossier possédant toutes les images aléatoires
+\item {\ttfamily cities.\+csv} \+: Fichier csv qui recense toute les villes de france
+\item {\ttfamily departments.\+csv} \+: Fichier csv qui recense tout les departements de france
+\item {\ttfamily index.\+php} \+: Page principale du site
+\item {\ttfamily meteodetailled.\+php} \+: Page montrant la météo détaillé d\textquotesingle{}une ville
+\item {\ttfamily meteoweek.\+php} \+: Page montrant la météo sur plusieurs jours d\textquotesingle{}une ville
+\item {\ttfamily recherches.\+php} \+: Fichier csv qui recense toute les recherches sur le site
+\item {\ttfamily regions.\+csv} \+: Fichier csv qui recense toute les regions de france
+\item {\ttfamily siteplan.\+php} \+: Page plan de site du site web
+\item {\ttfamily stat.\+php} \+: Page affichant les recherches faite sur notre site
+\item {\ttfamily meteoweekastro.\+php} \+: Page affichant la météo astro de la ville
+\item {\ttfamily readme.\+md} \+: Fichier de documentation
+\end{DoxyItemize}\hypertarget{md_readme_autotoc_md4}{}\doxysection{\texorpdfstring{👥 Contributeurs}{👥 Contributeurs}}\label{md_readme_autotoc_md4}
+
+\begin{DoxyItemize}
+\item {\bfseries{Bertrand, Leopole dit Marie}} 
+\end{DoxyItemize}
