@@ -26,7 +26,7 @@
 <?php endif; ?>
 
 <?php if ($selectedDepartement): ?>
-    <form action="https://adamleopole.alwaysdata.net/projet/meteoweek.php" method="GET">
+    <form action="./meteoweek.php" method="GET">
         <input type="hidden" name="region" value="<?= htmlspecialchars($selectedRegion) ?>">
         <input type="hidden" name="departement" value="<?= htmlspecialchars($selectedDepartement) ?>">
         <label for="city-2">Choisissez une commune :</label>

@@ -1,7 +1,7 @@
 <?php
 require_once "./include/functions.inc.php";
 $title = "Météo Info Semaine";
-$h1 ="Meteo pour " . getcity();
+$h1 ="Météo pour " . getcity();
 require"./include/header.inc.php";
 if (isset($_GET['city'])){
     echo addStat($_GET['city']);
@@ -14,9 +14,9 @@ if (isset($_GET['city'])){
         <caption>Tableau des prévisions pour les 3 prochains jours</caption>
         <tr>
             <th>Donnees\Jour</th>
-            <th><a href="meteodetailled.php?city=<?php echo $city ?>&amp;day=0" class="tab-link"><?php echo date('d/m', strtotime($forecastday[0]['date'])); ?></a></th>
-            <th><a href="meteodetailled.php?city=<?php echo $city ?>&amp;day=1" class="tab-link"><?php echo date('d/m', strtotime($forecastday[1]['date'])); ?></a></th>
-            <th><a href="meteodetailled.php?city=<?php echo $city ?>&amp;day=2" class="tab-link"><?php echo date('d/m', strtotime($forecastday[2]['date'])); ?></a></th>
+            <th><a href="meteodetailled.php?city=<?php echo getcity() ?>&amp;day=0" class="tab-link"><?php echo date('d/m', strtotime($forecastday[0]['date'])); ?></a></th>
+            <th><a href="meteodetailled.php?city=<?php echo getcity() ?>&amp;day=1" class="tab-link"><?php echo date('d/m', strtotime($forecastday[1]['date'])); ?></a></th>
+            <th><a href="meteodetailled.php?city=<?php echo getcity() ?>&amp;day=2" class="tab-link"><?php echo date('d/m', strtotime($forecastday[2]['date'])); ?></a></th>
         </tr>
         <tr>
             <th>Icone Meteo</th>
@@ -48,7 +48,7 @@ if (isset($_GET['city'])){
 <?php else: ?>
 <main>
     <span>Erreur lors de la saisie de la ville, veuillez réessayer</span>
-    <form method="GET" action="https://adamleopole.alwaysdata.net/projet/meteoweek.php">
+    <form method="GET" action="./meteoweek.php">
         <input type="text" name="city" placeholder="Entrez une ville" required>
         <button type="submit">Rechercher</button>
     </form>

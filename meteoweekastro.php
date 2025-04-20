@@ -1,7 +1,7 @@
 <?php
 require_once "./include/functions.inc.php";
 $title = "Météo Info Astro";
-$h1 ="Meteo Astro pour " . getcity();
+$h1 ="Météo Astro pour " . getcity();
 require"./include/header.inc.php";
 if (isset($_GET['city'])){
     echo addStat($_GET['city']);
@@ -42,7 +42,7 @@ if (isset($_GET['city'])){
 <?php else: ?>
 <main>
     <span>Erreur lors de la saisie de la ville, veuillez réessayer</span>
-    <form method="GET" action="https://adamleopole.alwaysdata.net/projet/meteoweek.php">
+    <form method="GET" action="./meteoweek.php">
         <input type="text" name="city" placeholder="Entrez une ville" required>
         <button type="submit">Rechercher</button>
     </form>

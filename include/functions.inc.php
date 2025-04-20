@@ -86,12 +86,12 @@ define("WEATHERAPI_API_KEY", "87fd579e5f744cf9a2f190415253103");
 function getWeather($city) {
     $coords = getCoord($city);
     if ($coords) {
-        $query = $coords['lat'] . ',' . $coords['lon'];
+        $recherche = $coords['lat'] . ',' . $coords['lon'];
     } else {
-        $query = $city;
+        $recherche = $city;
     }
 
-    $url = "http://api.weatherapi.com/v1/forecast.json?key=" . WEATHERAPI_API_KEY . "&q=" . $query . "&days=3&aqi=no&alerts=no";
+    $url = "http://api.weatherapi.com/v1/forecast.json?key=" . WEATHERAPI_API_KEY . "&q=" . $recherche . "&days=3&aqi=no&alerts=no";
     $info = @file_get_contents($url);
     if ($info) {
         return json_decode($info, true);
@@ -107,16 +107,16 @@ function getWeather($city) {
  * @return array de latitude et longitude si la ville est dans le fichier csv
  */
 function getCoord($city) {
-    $filename = 'cities.csv';
-    if (!file_exists($filename)) return null;
+    $nomfichier = 'cities.csv';
+    if (!file_exists($nomfichier)) return null;
 
-    $rows = file($filename, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-    foreach ($rows as $row) {
-        $fields = str_getcsv($row);
-        if (isset($fields[4]) && strtolower(trim($fields[4])) === strtolower(trim((string)$city))) {
+    $lignes = file($nomfichier, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($lignes as $ligne) {
+        $donnee = str_getcsv($ligne);
+        if (isset($donnee[4]) && strtolower(trim($donnee[4])) === strtolower(trim((string)$city))) {
                 return [
-                    'lat' => $fields[6],
-                    'lon' => $fields[7]
+                    'lat' => $donnee[6],
+                    'lon' => $donnee[7]
                 ];
         }
     }
@@ -137,14 +137,14 @@ function regionlist() {
     $fpdep = fopen('departments.csv', 'r');
     $fpcit = fopen('cities.csv', 'r');
     $arrayreg= [];
-    while (($row = fgetcsv($fpreg)) !== false) {
-        $region[] = $row;
+    while (($ligne = fgetcsv($fpreg)) !== false) {
+        $region[] = $ligne;
     }
-    while (($row = fgetcsv($fpdep)) !== false) {
-        $dep[] = $row;
+    while (($ligne = fgetcsv($fpdep)) !== false) {
+        $dep[] = $ligne;
     }
-    while (($row = fgetcsv($fpcit)) !== false) {
-        $cit[] = $row;
+    while (($ligne = fgetcsv($fpcit)) !== false) {
+        $cit[] = $ligne;
     }
 
     fclose($fpreg);
@@ -203,19 +203,17 @@ function saveCookieHistory($history) {
  */
 function addCityHistory() {
     $city = isset($_GET['city']) ? trim($_GET['city']) : null;
+
     if ($city) {
         $history = loadCookieHistory();
-
-        // Supprimer la ville si elle est déjà dans l'historique (insensible à la casse)
-        $history = array_filter($history, function($c) use ($city) {
-            return strtolower($c) !== strtolower($city);
-        });
-
-        // Ajouter la nouvelle ville au début
-        array_unshift($history, $city);
-
-        // Sauvegarder
-        saveCookieHistory($history);
+        $history2 = [];
+        foreach ($history as $comparaison) {
+            if (strtolower($comparaison) !== strtolower($city)) {
+                $history2[] = $comparaison;
+            }
+        }
+        array_unshift($history2, $city);
+        saveCookieHistory($history2);
     }
 }
 
@@ -231,7 +229,7 @@ function displayhistory() {
         $display = "<nav id='history'><ul>";
         $last5cities = array_slice($history, 0, 5);
         foreach ($last5cities as $city) {
-            $display .= "<li><a href='https://adamleopole.alwaysdata.net/projet/meteoweek.php?city=" . str_replace(" ", "%20", $city) . "'>" . htmlspecialchars($city) . "</a></li>";
+            $display .= "<li><a href='./meteoweek.php?city=" . str_replace(" ", "%20", $city) . "'>" . htmlspecialchars($city) . "</a></li>";
         }
         $display .= "</ul></nav>";
         return $display;

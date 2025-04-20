@@ -54,7 +54,7 @@ if ($selectedDepartement) {
                 <a href="index.php"><img src="images/logo.png" alt="Logo Meteo Info" width="150" height="150"/></a>
             </div>
             <div class="header1-2">
-                <form method="GET" action="https://adamleopole.alwaysdata.net/projet/meteoweek.php">
+                <form method="GET" action="./meteoweek.php">
                     <label for="city-1">Ville : </label>
                     <input type="text" id="city-1" name="city" placeholder="Entrez une ville" required="required"/>
                     <button type="submit">Rechercher</button>
@@ -82,13 +82,24 @@ if ($selectedDepartement) {
             </div>
         </div>
         <h1><?= $h1 ?></h1>
+        <?php if (isset($_GET['city'])): ?>
         <nav id="navigation">
             <ul>
                 <li><a href="index.php">Carte de France</a></li>
-                <li><a href="meteoweek.php">Previsions</a></li>
-                <li><a href="meteoweekastro.php">Meteo Astro de la semaine</a></li>
+                <li><a href="meteoweek.php?city=<?php echo getcity() ?>">Prévisions</a></li>
+                <li><a href="meteoweekastro.php?city=<?php echo getcity() ?>">Météo Astro de la semaine</a></li>
                 <li><a href="stat.php">Statistiques</a></li>
             </ul>
         </nav>
+        <?php else: ?>
+        <nav id="navigation">
+            <ul>
+                <li><a href="index.php">Carte de France</a></li>
+                <li><a href="meteoweek.php">Prévisions</a></li>
+                <li><a href="meteoweekastro.php">Météo Astro de la semaine</a></li>
+                <li><a href="stat.php">Statistiques</a></li>
+            </ul>
+        </nav>
+        <?php endif; ?>
         <?php echo displayhistory(); ?>
     </header>
