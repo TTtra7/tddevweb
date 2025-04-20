@@ -11,7 +11,7 @@ Il intègre des données issues d'API, et propose une expérience utilisateur pe
 - **CSS3** : mise en forme (style)
 - **PHP8** : génération dynamique du contenu, enregistrement des consultations
 - **Cookies** : gestion des préférences utilisateur (mode jour/nuit, ville consultée)
-- **APIs** : récupération des données météo au format JSON ou XML
+- **APIs** : récupération des données météo au format utilisé
 
 ## 📁 Structure du projet
 
